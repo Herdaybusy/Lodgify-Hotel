@@ -13,7 +13,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time  
 
-# Data Extraction
+# Automated Web Scraping Script for Hotel Data Extraction from Booking.com
 options = Options()
 options.headless = True
 
@@ -44,15 +44,17 @@ while True:
     
     last_height = new_height
     
-    
 page_source = driver.page_source
 print('successful')
 driver.quit()
 
+# Parsing Web Page Data Using BeautifulSoup
 soup = BeautifulSoup(page_source, 'html.parser')
 
+# Extracting Hotel Data Using BeautifulSoup
 hotels =soup.find_all('div', {'data-testid' : 'property-card'}
 
+# Extracting Hotel Details (Name, Location, Price, Rating, and Link) Using BeautifulSoup
 hotels_data = []
 for hotel in hotels:
     name_element = hotel.find('div', {'data-testid' : 'title'})
@@ -81,10 +83,11 @@ for hotel in hotels:
         'rating' :rating 
          
     })
+# Converting file extrated to Dataframe
 final_data = pd.DataFrame(hotels_data)
 
 # Transformation
-
+# Removing symbols that can stand  as constraints for data analysis
 def clean_price(price):
     return price.replace('£', '').replace(',', '').strip()
 final_data['price'] =  final_data['price'].apply(clean_price)
